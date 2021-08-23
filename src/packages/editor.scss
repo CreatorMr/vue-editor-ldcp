@@ -1,0 +1,82 @@
+.editor {
+  width: 100%;
+  height: 100%;
+
+  &-left,
+  &-right {
+    position: absolute;
+    width: 270px;
+    background-color: red;
+    top: 0;
+    bottom: 0;
+  }
+
+  &-left {
+    left: 0;
+    &-item {
+      width: 250px;
+      margin: 20px auto;
+      min-height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #ffffff;
+      padding: 20px;
+      box-sizing: border-box;
+      cursor: move;
+      user-select: none;
+      position: relative;
+      > span {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgb(43, 43, 173);
+        color: #ffffff;
+      }
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.2;
+        background-color: #ccc;
+      }
+    }
+  }
+
+  &-right {
+    right: 0;
+  }
+
+  &-top {
+    position: absolute;
+    right: 280px;
+    left: 280px;
+
+    height: 80px;
+    background: blue;
+  }
+
+  &-container {
+    padding: 100px 270px 0;
+    height: 100%;
+    box-sizing: border-box;
+    &-canvas {
+      height: 100%;
+      overflow: scroll;
+      &__content {
+        margin: 20px auto;
+        width: 550px;
+        height: 550px;
+        background-color: yellow;
+        position: relative;
+      }
+    }
+  }
+}
+
+.editor-block {
+  position: absolute;
+}
