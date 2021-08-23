@@ -75,6 +75,14 @@ export default defineComponent({
       currentComponent = component
     };
 
+    const dragEnd = (e) => {
+      containerRef.value.removeEventListener("dragenter", dragenter);
+      containerRef.value.removeEventListener("dragover", dragover);
+      containerRef.value.removeEventListener("dragleave", dragleave);
+      containerRef.value.removeEventListener("drop", drop);
+    }
+
+
     return () => (
       <div class="editor">
         <div className="editor-left">
@@ -83,6 +91,7 @@ export default defineComponent({
               className="editor-left-item"
               draggable
               ondragstart={e => dragStart(e, component)}
+              onDragEnd={dragEnd}
             >
               <span>{component.lebel}</span>
               <div>{component.preview()}</div>
