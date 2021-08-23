@@ -3,6 +3,8 @@ import "./editor.scss";
 import EditorBlock from "./editor-block";
 import deepcopy from "deepcopy";
 import { useMenuDragger } from "./useMenuDragger";
+import { useFocus } from "./useFocus";
+import { useBlockDragger } from "./useBlockDragger";
 
 
 export default defineComponent({
@@ -35,45 +37,17 @@ export default defineComponent({
     const containerRef = ref(null);
     // 1.实现拖拽
     const { dragStart, dragEnd } = useMenuDragger(data, containerRef) // 实现菜单的拖拽功能
-    // 2\实现获取焦点
+    // 2\实现获取焦点, 选中可能直接拖拽
+
+    const { containerMousedown, blockMousedown, focusData } = useFocus(data, (e) => {
+      mousedown(e)
+    })
+    const { mousedown } = useBlockDragger(focusData)
+
 
     // 3、实现拖拽多个元素的功能
 
-    const clearBlockFocus = () => {
-      data.value.blocks.forEach(block => block.focus = false)
-    }
-    const blockMousedown = (e, block) => {
-      console.log('block mousedown')
-      e.preventDefault()
-      e.stopPropagation()
-      // block 上我们规划一个属性 focus获取焦点后就将focus 变为true
 
-      if (e.shiftKey) {
-        block.focus = !block.focus
-      } else {
-        if (!block.focus) {
-          clearBlockFocus()
-          block.focus = true
-        } else {
-          block.focus = false
-        }
-      }
-
-    }
-    const focusData = computed(() => {
-      let focus = []
-      let unfocused = []
-      data.value.blocks.forEach(block => (block.focus ? focus : unfocused).push(block))
-      return {
-        focus,
-        unfocused
-      }
-
-    })
-    const containerMousedown = () => {
-      console.log('dd')
-      clearBlockFocus()
-    }
     return () => (
       <div class="editor">
         <div className="editor-left">
