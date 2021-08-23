@@ -33,8 +33,47 @@ export default defineComponent({
     const config = inject("config");
 
     const containerRef = ref(null);
-    const {dragStart, dragEnd} = useMenuDragger(data, containerRef) // 实现菜单的拖拽功能
+    // 1.实现拖拽
+    const { dragStart, dragEnd } = useMenuDragger(data, containerRef) // 实现菜单的拖拽功能
+    // 2\实现获取焦点
 
+    // 3、实现拖拽多个元素的功能
+
+    const clearBlockFocus = () => {
+      data.value.blocks.forEach(block => block.focus = false)
+    }
+    const blockMousedown = (e, block) => {
+      console.log('block mousedown')
+      e.preventDefault()
+      e.stopPropagation()
+      // block 上我们规划一个属性 focus获取焦点后就将focus 变为true
+
+      if (e.shiftKey) {
+        block.focus = !block.focus
+      } else {
+        if (!block.focus) {
+          clearBlockFocus()
+          block.focus = true
+        } else {
+          block.focus = false
+        }
+      }
+
+    }
+    const focusData = computed(() => {
+      let focus = []
+      let unfocused = []
+      data.value.blocks.forEach(block => (block.focus ? focus : unfocused).push(block))
+      return {
+        focus,
+        unfocused
+      }
+
+    })
+    const containerMousedown = () => {
+      console.log('dd')
+      clearBlockFocus()
+    }
     return () => (
       <div class="editor">
         <div className="editor-left">
@@ -60,9 +99,14 @@ export default defineComponent({
               className="editor-container-canvas__content"
               style={containerStyles.value}
               ref={containerRef}
+              onmousedown={containerMousedown}
             >
               {data.value.blocks.map(block => (
-                <EditorBlock block={block} />
+                <EditorBlock
+                  class={block.focus ? 'editor-block-focus' : ''}
+                  onMousedown={e => blockMousedown(e, block)}
+                  block={block}
+                />
               ))}
             </div>
           </div>
