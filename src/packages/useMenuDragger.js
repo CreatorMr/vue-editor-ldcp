@@ -1,3 +1,5 @@
+import { events } from "./events";
+
 export function useMenuDragger(data, containerRef) {
   let currentComponent = null;
 
@@ -22,13 +24,12 @@ export function useMenuDragger(data, containerRef) {
           left: e.offsetX,
           zIndex: 1,
           key: currentComponent.key,
-          alignCenter: true, // 松手的时候居中
+          alignCenter: true // 松手的时候居中
         }
       ]
-    }
+    };
     // 用完在置空
     currentComponent = null;
-
   };
 
   const dragStart = (e, component) => {
@@ -41,18 +42,21 @@ export function useMenuDragger(data, containerRef) {
     containerRef.value.addEventListener("dragover", dragover);
     containerRef.value.addEventListener("dragleave", dragleave);
     containerRef.value.addEventListener("drop", drop);
-    currentComponent = component
+    currentComponent = component;
+    // 拖拽前发布 时间
+    events.emit("start");
   };
 
-  const dragEnd = (e) => {
+  const dragEnd = e => {
     containerRef.value.removeEventListener("dragenter", dragenter);
     containerRef.value.removeEventListener("dragover", dragover);
     containerRef.value.removeEventListener("dragleave", dragleave);
     containerRef.value.removeEventListener("drop", drop);
-  }
+    events.emit("end"); // 发布end
+  };
 
   return {
     dragStart,
-    dragEnd,
-  }
+    dragEnd
+  };
 }

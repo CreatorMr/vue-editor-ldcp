@@ -20,13 +20,16 @@ export default defineComponent({
     // 渲染完成
     onMounted(() => {
 
-      let { offsetWidth, offsetHeight} = blockRef.value
-      if(props.block.alignCenter) {
-        props.block.left = props.block.left - offsetWidth/2
-        props.block.top = props.block.top - offsetHeight/2
+      let { offsetWidth, offsetHeight } = blockRef.value
+      if (props.block.alignCenter) {
+        props.block.left = props.block.left - offsetWidth / 2
+        props.block.top = props.block.top - offsetHeight / 2
 
-        props.block.alignCenter = false
+        props.block.alignCenter = false;
       }
+
+      props.block.width = offsetWidth
+      props.block.height = offsetHeight
 
     })
     return () => {
